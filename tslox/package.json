@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "yarn run build && yarn run dev",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "node dist/src/index.js",
     "build": "yarn run lint && yarn run compile",
     "rebuild": "yarn run clean && yarn run build",
     "lint": "eslint -c ./eslint.config.mjs .",
@@ -37,10 +37,11 @@
     "eslint": "^9.20.0",
     "module-alias": "^2.2.3",
     "prettier": "^3.4.2",
-    "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.23.0",
     "yarn": "^1.22.22"
   },
-  "_moduleAliases": {}
+  "_moduleAliases": {
+    "@local/scanning": "dist/src/scanning"
+  }
 }

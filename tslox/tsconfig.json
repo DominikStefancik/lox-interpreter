@@ -7,7 +7,9 @@
     "rootDir": ".",
     "outDir": "dist",
     "baseUrl": "./src",
-    "paths": {}
+    "paths": {
+      "@local/scanning/*": ["scanning/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
