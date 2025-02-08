@@ -1,0 +1,46 @@
+{
+  "name": "tslox",
+  "version": "0.0.1",
+  "description": "The interpreter of the Lox language written in Typescript",
+  "main": "index.js",
+  "scripts": {
+    "start": "yarn run build && yarn run dev",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "yarn run lint && yarn run compile",
+    "rebuild": "yarn run clean && yarn run build",
+    "lint": "eslint -c ./eslint.config.mjs .",
+    "clean": "[ -d dist ] && rm -f -r dist",
+    "compile": "tsc -p .",
+    "compile:watch": "tsc -w",
+    "pretest": "yarn run compile",
+    "posttest": "yarn run lint",
+    "prettify": "prettier --write \"./src/**/*.{js,ts,json}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DominikStefancik/lox-interpreter/tslox"
+  },
+  "keywords": [
+    "interpreter",
+    "Lox",
+    "language",
+    "typescript"
+  ],
+  "author": "Dominik Stefancik",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.20.0",
+    "@types/node": "^22.13.1",
+    "@typescript-eslint/eslint-plugin": "^8.23.0",
+    "@typescript-eslint/parser": "^8.23.0",
+    "eslint": "^9.20.0",
+    "module-alias": "^2.2.3",
+    "prettier": "^3.4.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0",
+    "yarn": "^1.22.22"
+  },
+  "_moduleAliases": {}
+}
