@@ -6,6 +6,7 @@
   "scripts": {
     "start": "yarn run build && yarn run dev",
     "dev": "node dist/src/index.js",
+    "test": "mocha dist/tests/**/*.test.js",
     "build": "yarn run lint && yarn run compile",
     "rebuild": "yarn run clean && yarn run build",
     "lint": "eslint -c ./eslint.config.mjs .",
@@ -14,7 +15,7 @@
     "compile:watch": "tsc -w",
     "pretest": "yarn run compile",
     "posttest": "yarn run lint",
-    "prettify": "prettier --write \"./src/**/*.{js,ts,json}\""
+    "prettify": "prettier --write \"./{src,tests}/**/*.{js,ts,json}\""
   },
   "repository": {
     "type": "git",
@@ -31,10 +32,14 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.20.0",
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.13.1",
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.23.0",
+    "chai": "^5.1.2",
     "eslint": "^9.20.0",
+    "mocha": "^11.1.0",
     "module-alias": "^2.2.3",
     "prettier": "^3.4.2",
     "typescript": "^5.7.3",

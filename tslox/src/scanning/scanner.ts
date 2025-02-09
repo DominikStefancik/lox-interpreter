@@ -181,7 +181,18 @@ export class Scanner {
     while (this.isAlphaNumeric(this.peek())) {
       this.advance();
     }
-    this.addNonLiteralToken(TokenType.IDENTIFIER);
+
+    const text = this.source.substring(this.start, this.current);
+    let type: TokenType;
+
+    if (this.keywords.has(text)) {
+      // keywords are also identifiers, which are reserved by the compiler
+      type = this.keywords.get(text);
+    } else {
+      type = TokenType.IDENTIFIER;
+    }
+
+    this.addNonLiteralToken(type);
   }
 
   private addToken(type: TokenType, literal: unknown) {
@@ -212,7 +223,7 @@ export class Scanner {
   private advance(): string {
     this.current++;
 
-    return this.source.charAt(this.current);
+    return this.source.charAt(this.current - 1);
   }
 
   private match(expected: string): boolean {

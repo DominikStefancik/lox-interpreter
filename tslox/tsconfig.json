@@ -13,12 +13,11 @@
   },
   "include": [
     "src/**/*.ts",
-    "test/**/*.ts"
+    "tests/**/*.ts"
   ],
   "exclude": [
-    "./src/**/*.test.js",
-    "./src/**/*.spec.js",
-    "./src/tests",
+    "./tests/**/*.test.js",
+    "./tests/**/*.spec.js",
     "dist"
   ]
 }
