@@ -52,11 +52,11 @@ export class Lox {
     const tokens = scanner.scanTokens();
 
     for (const token of tokens) {
-      console.log(token);
+      console.log(token.toString());
     }
   }
 
-  private static error(line: number, message: string) {
+  public static error(line: number, message: string) {
     Lox.report(line, '', message);
   }
 
