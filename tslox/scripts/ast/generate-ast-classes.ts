@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 
-type classType = 'Expression' | 'Token' | 'Binary' | 'Unary' | 'object';
+type classType = 'Expression' | 'Token' | 'Binary' | 'Unary' | 'any';
 
 export interface ExpressionType {
   filename: string;
@@ -20,7 +20,7 @@ function generateImportSection(imports: string[]): string {
 
 function generateConstructorArgumentsList(fields: ExpressionField[]): string {
   return fields.reduce((accumulator, current, index) => {
-    accumulator += `private readonly ${current.name}: ${current.type}`;
+    accumulator += `public readonly ${current.name}: ${current.type}`;
 
     if (index != fields.length - 1) {
       accumulator += ',';
@@ -41,7 +41,7 @@ function generateFileContent(type: ExpressionType, baseClassName: string): strin
         super();
       }
       
-      public accept(visitor: ExpressionVisitor): Expression {
+      public accept<R>(visitor: ExpressionVisitor<R>): R {
         return visitor.visit${type.className}${baseClassName}(this);
       }
     }

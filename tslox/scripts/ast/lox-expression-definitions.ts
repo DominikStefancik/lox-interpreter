@@ -63,7 +63,7 @@ export const expressionTypes: ExpressionType[] = [
     fields: [
       {
         name: 'value',
-        type: 'object',
+        type: 'any',
       },
     ],
     imports: [

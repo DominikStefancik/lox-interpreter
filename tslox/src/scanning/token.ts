@@ -8,6 +8,10 @@ export class Token {
     private readonly line: number
   ) {}
 
+  public getLexeme(): string {
+    return this.lexeme;
+  }
+
   public toString(): string {
     return `Token { type: ${TokenType[this.type]}, lexeme: ${this.lexeme}, literal: ${this.literal}, line: ${this.line} }`;
   }

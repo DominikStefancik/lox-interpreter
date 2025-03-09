@@ -11,7 +11,7 @@ function generateImportSection(types: ExpressionType[]): string {
 
 function generateVisitorFunctions(types: ExpressionType[], baseClassName: string): string {
   return types.reduce((accumulator, currentType) => {
-    accumulator += `visit${currentType.className}${baseClassName}: (expression: ${currentType.className}) => ${baseClassName}\n`;
+    accumulator += `visit${currentType.className}${baseClassName}: (expression: ${currentType.className}) => R;\n`;
 
     return accumulator;
   }, '');
@@ -23,10 +23,9 @@ export function generateVisitor(
   types: ExpressionType[]
 ) {
   const content = `
-    import { ${baseClassName} } from './${baseClassName.toLowerCase()}'
     ${generateImportSection(types)}
     
-    export interface ExpressionVisitor {
+    export interface ExpressionVisitor<R> {
         ${generateVisitorFunctions(types, baseClassName)}
     }
   `;

@@ -4,13 +4,13 @@ import { Token } from '../scanning/token';
 
 export class Unary extends Expression {
   constructor(
-    private readonly operator: Token,
-    private readonly right: Expression
+    public readonly operator: Token,
+    public readonly right: Expression
   ) {
     super();
   }
 
-  public accept(visitor: ExpressionVisitor): Expression {
+  public accept<R>(visitor: ExpressionVisitor<R>): R {
     return visitor.visitUnaryExpression(this);
   }
 }
