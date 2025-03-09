@@ -15,7 +15,8 @@
     "compile:watch": "tsc -w",
     "pretest": "yarn run compile",
     "posttest": "yarn run lint",
-    "prettify": "prettier --write \"./{src,tests}/**/*.{js,ts,json}\""
+    "prettify": "prettier --write \"./{src,tests}/**/*.{js,ts,json}\"",
+    "generateAst": "ts-node scripts/ast/generate-ast-classes.ts ./src/ast && yarn prettify"
   },
   "repository": {
     "type": "git",
