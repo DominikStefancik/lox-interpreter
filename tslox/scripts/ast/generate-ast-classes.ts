@@ -1,6 +1,11 @@
 import * as fs from 'node:fs';
 
-type classType = 'Expression' | 'Token' | 'Binary' | 'Unary' | 'any';
+type ClassType =
+  | 'Expression'
+  | 'Token'
+  | 'Binary'
+  | 'Unary'
+  | `number | string | 'true' | 'false' | 'nil'`;
 
 export interface ExpressionType {
   filename: string;
@@ -11,7 +16,7 @@ export interface ExpressionType {
 
 interface ExpressionField {
   name: string;
-  type: classType;
+  type: ClassType;
 }
 
 function generateImportSection(imports: string[]): string {

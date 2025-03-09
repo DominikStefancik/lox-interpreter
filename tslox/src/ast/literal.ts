@@ -2,7 +2,7 @@ import { Expression } from './expression';
 import { ExpressionVisitor } from './expression-visitor';
 
 export class Literal extends Expression {
-  constructor(public readonly value: any) {
+  constructor(public readonly value: number | string | 'true' | 'false' | 'nil') {
     super();
   }
 
