@@ -1,4 +1,3 @@
-import { expressionTypes } from './lox-expression-definitions';
 import * as fs from 'node:fs';
 
 type classType = 'Expression' | 'Token' | 'Binary' | 'Unary' | 'object';
@@ -41,21 +40,17 @@ function generateFileContent(type: ExpressionType, baseClassName: string): strin
       ) {
         super();
       }
+      
+      public accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visit${type.className}${baseClassName}(this);
+      }
     }
   `;
 }
 
-function defineAst(outputDirPath: string, baseClassName: string, types: ExpressionType[]) {
+export function generateAst(outputDirPath: string, baseClassName: string, types: ExpressionType[]) {
   for (const type of types) {
     const content = generateFileContent(type, baseClassName);
     fs.writeFileSync(`${outputDirPath}/${type.filename}.ts`, content);
   }
 }
-
-const { argv } = process;
-
-if (argv.length < 3) {
-  throw new Error(`The argument for the output directory must be provided`);
-}
-
-defineAst(argv[2], 'Expression', expressionTypes);

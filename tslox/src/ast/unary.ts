@@ -1,4 +1,5 @@
 import { Expression } from './expression';
+import { ExpressionVisitor } from './expression-visitor';
 import { Token } from '../scanning/token';
 
 export class Unary extends Expression {
@@ -7,5 +8,9 @@ export class Unary extends Expression {
     private readonly right: Expression
   ) {
     super();
+  }
+
+  public accept(visitor: ExpressionVisitor): Expression {
+    return visitor.visitUnaryExpression(this);
   }
 }

@@ -16,6 +16,7 @@ export const expressionTypes: ExpressionType[] = [
     ],
     imports: [
       `import { Expression } from './expression';`,
+      `import { ExpressionVisitor } from './expression-visitor';`,
       `import { Token } from '../scanning/token';`,
     ],
   },
@@ -38,6 +39,7 @@ export const expressionTypes: ExpressionType[] = [
     ],
     imports: [
       `import { Expression } from './expression';`,
+      `import { ExpressionVisitor } from './expression-visitor';`,
       `import { Token } from '../scanning/token';`,
     ],
   },
@@ -50,7 +52,10 @@ export const expressionTypes: ExpressionType[] = [
         type: 'Expression',
       },
     ],
-    imports: [`import { Expression } from './expression';`],
+    imports: [
+      `import { Expression } from './expression';`,
+      `import { ExpressionVisitor } from './expression-visitor';`,
+    ],
   },
   {
     filename: 'literal',
@@ -61,6 +66,9 @@ export const expressionTypes: ExpressionType[] = [
         type: 'object',
       },
     ],
-    imports: [`import { Expression } from './expression';`],
+    imports: [
+      `import { Expression } from './expression';`,
+      `import { ExpressionVisitor } from './expression-visitor';`,
+    ],
   },
 ];
