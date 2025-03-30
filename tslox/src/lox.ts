@@ -5,10 +5,17 @@ import { Scanner } from '@local/scanning/scanner';
 import { Token } from '@local/scanning/token';
 import { TokenType } from '@local/scanning/token-type';
 import { Parser } from '@local/parsing/parser';
-import { AstPrinter } from '@local/ast/ast-printer';
+import { RuntimeError } from '@local/interpreter/runtime-error';
+import { Interpreter } from '@local/interpreter/interpreter';
 
 export class Lox {
-  public static hasError: boolean = false;
+  /**
+   * The interpreter has to be static, so that successive calls to run() inside a REPL session reuse the same instance.
+   * This is important for global variables. Those variables should persist throughout the REPL session.
+   */
+  private static interpreter: Interpreter = new Interpreter();
+  public static hadError: boolean = false;
+  public static hadRuntimeError: boolean = false;
 
   public start() {
     const { argv } = process;
@@ -28,8 +35,12 @@ export class Lox {
     const fileContent = fs.readFileSync(filename, { encoding: 'utf-8' }).toString();
     this.run(fileContent);
 
-    if (Lox.hasError) {
-      process.exit(1);
+    if (Lox.hadError) {
+      process.exit(65);
+    }
+
+    if (Lox.hadRuntimeError) {
+      process.exit(70);
     }
   }
 
@@ -44,7 +55,7 @@ export class Lox {
       .on('line', (line) => {
         this.run(line);
         // in the interactive mode, if the user makes a mistake, it shouldn’t kill their entire session.
-        Lox.hasError = false;
+        Lox.hadError = false;
         promptInterface.prompt();
       });
 
@@ -57,11 +68,11 @@ export class Lox {
     const parser = new Parser(tokens);
     const expression = parser.parse();
 
-    if (Lox.hasError) {
+    if (Lox.hadError) {
       return;
     }
 
-    console.log(new AstPrinter().print(expression));
+    Lox.interpreter.interpret(expression);
   }
 
   public static error(line: number, message: string) {
@@ -76,8 +87,13 @@ export class Lox {
     }
   }
 
+  public static runtimeError(error: RuntimeError) {
+    console.error(`${error.getMessage()} [line ${error.getToken().getLine()}]`);
+    Lox.hadError = true;
+  }
+
   private static report(line: number, where: string, message: string) {
     console.error(`[line ${line}] Error ${where}: ${message}]`);
-    Lox.hasError = true;
+    Lox.hadError = true;
   }
 }

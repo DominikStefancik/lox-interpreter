@@ -5,8 +5,22 @@ import { Literal } from '@local/ast/literal';
 import { Unary } from '@local/ast/unary';
 import { Expression } from '@local/ast/expression';
 import { TokenType } from '@local/scanning/token-type';
+import { Token } from '@local/scanning/token';
+import { RuntimeError } from '@local/interpreter/runtime-error';
+import { Lox } from '../lox';
 
 export class Interpreter implements ExpressionVisitor<object> {
+  interpret(expression: Expression) {
+    try {
+      const value = this.evaluate(expression);
+      console.log(this.stringify(value));
+    } catch (error) {
+      if (error instanceof RuntimeError) {
+        Lox.runtimeError(error);
+      }
+    }
+  }
+
   visitUnaryExpression(expression: Unary): object {
     /**
      * Unary expressions have a single subexpression that we must evaluate first.
@@ -17,6 +31,7 @@ export class Interpreter implements ExpressionVisitor<object> {
 
     switch (expression.operator.getType()) {
       case TokenType.MINUS:
+        this.checkSingleNumberOperand(expression.operator, right);
         return -(right as unknown as number) as unknown as object;
       case TokenType.BANG:
         return !this.isTruthy(right) as unknown as object;
@@ -35,12 +50,16 @@ export class Interpreter implements ExpressionVisitor<object> {
       case TokenType.BANG_EQUAL:
         return !this.isEqual(left, right) as unknown as object;
       case TokenType.GREATER:
+        this.checkNumberOperands(expression.operator, left, right);
         return ((left as unknown as number) > (right as unknown as number)) as unknown as object;
       case TokenType.GREATER_EQUAL:
+        this.checkNumberOperands(expression.operator, left, right);
         return ((left as unknown as number) >= (right as unknown as number)) as unknown as object;
       case TokenType.LESS:
+        this.checkNumberOperands(expression.operator, left, right);
         return ((left as unknown as number) < (right as unknown as number)) as unknown as object;
       case TokenType.LESS_EQUAL:
+        this.checkNumberOperands(expression.operator, left, right);
         return ((left as unknown as number) <= (right as unknown as number)) as unknown as object;
       case TokenType.PLUS:
         if (left instanceof Number && right instanceof Number) {
@@ -51,7 +70,7 @@ export class Interpreter implements ExpressionVisitor<object> {
           return ((left as unknown as string) + (right as unknown as string)) as unknown as object;
         }
 
-        break;
+        throw new RuntimeError(expression.operator, 'Operands must be two numbers or two strings');
       case TokenType.MINUS:
         return ((left as unknown as number) - (right as unknown as number)) as unknown as object;
       case TokenType.SLASH:
@@ -107,5 +126,37 @@ export class Interpreter implements ExpressionVisitor<object> {
     }
 
     return objectA === objectB;
+  }
+
+  private checkSingleNumberOperand(operator: Token, operand: object) {
+    if (operand instanceof Number) {
+      return;
+    }
+
+    throw new RuntimeError(operator, 'Operand must be a number');
+  }
+
+  private checkNumberOperands(operator: Token, left: object, right: object) {
+    if (left instanceof Number && right instanceof Number) {
+      return;
+    }
+
+    throw new RuntimeError(operator, 'Operands must be a number');
+  }
+
+  private stringify(object: object) {
+    if (object === null) return 'nil';
+
+    if (object instanceof Number) {
+      let text = `${object}`;
+
+      if (text.endsWith('.0')) {
+        text = text.substring(0, text.length - 2);
+      }
+
+      return text;
+    }
+
+    return `${object}`;
   }
 }

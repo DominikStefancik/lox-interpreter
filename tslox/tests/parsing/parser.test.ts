@@ -165,7 +165,7 @@ describe('Parser', () => {
     const expression = sut.parse();
 
     expect(expression).to.be.equal(null);
-    expect(Lox.hasError).to.be.equal(true);
+    expect(Lox.hadError).to.be.equal(true);
   });
 
   it('returns null and reports error when expression is incorrect', () => {
@@ -179,6 +179,6 @@ describe('Parser', () => {
     const expression = sut.parse();
 
     expect(expression).to.be.equal(null);
-    expect(Lox.hasError).to.be.equal(true);
+    expect(Lox.hadError).to.be.equal(true);
   });
 });

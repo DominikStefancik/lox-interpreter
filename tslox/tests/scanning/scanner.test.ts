@@ -166,7 +166,7 @@ describe('Scanner', () => {
     const sut = new Scanner(source);
     sut.scanTokens();
 
-    expect(Lox.hasError).to.be.equal(true);
+    expect(Lox.hadError).to.be.equal(true);
   });
 
   it('reports error when a string is not properly terminated', () => {
@@ -174,6 +174,6 @@ describe('Scanner', () => {
     const sut = new Scanner(source);
     sut.scanTokens();
 
-    expect(Lox.hasError).to.be.equal(true);
+    expect(Lox.hadError).to.be.equal(true);
   });
 });
