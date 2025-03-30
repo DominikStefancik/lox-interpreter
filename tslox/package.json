@@ -49,6 +49,8 @@
     "yarn": "^1.22.22"
   },
   "_moduleAliases": {
-    "@local/scanning": "dist/src/scanning"
+    "@local/ast": "dist/src/ast",
+    "@local/scanning": "dist/src/scanning",
+    "@local/parsing": "dist/src/parsing"
   }
 }

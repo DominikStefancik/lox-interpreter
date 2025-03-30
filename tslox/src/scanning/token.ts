@@ -8,8 +8,20 @@ export class Token {
     private readonly line: number
   ) {}
 
+  public getType(): TokenType {
+    return this.type;
+  }
+
   public getLexeme(): string {
     return this.lexeme;
+  }
+
+  public getLiteral(): unknown {
+    return this.literal;
+  }
+
+  public getLine(): number {
+    return this.line;
   }
 
   public toString(): string {

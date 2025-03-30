@@ -2,6 +2,10 @@ import * as process from 'node:process';
 import * as fs from 'node:fs';
 import * as readline from 'node:readline';
 import { Scanner } from '@local/scanning/scanner';
+import { Token } from '@local/scanning/token';
+import { TokenType } from '@local/scanning/token-type';
+import { Parser } from '@local/parsing/parser';
+import { AstPrinter } from '@local/ast/ast-printer';
 
 export class Lox {
   public static hasError: boolean = false;
@@ -50,14 +54,26 @@ export class Lox {
   private run(source: string) {
     const scanner = new Scanner(source);
     const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const expression = parser.parse();
 
-    for (const token of tokens) {
-      console.log(token.toString());
+    if (Lox.hasError) {
+      return;
     }
+
+    console.log(new AstPrinter().print(expression));
   }
 
   public static error(line: number, message: string) {
     Lox.report(line, '', message);
+  }
+
+  public static tokenError(token: Token, message: string) {
+    if (token.getType() == TokenType.EOF) {
+      Lox.report(token.getLine(), ' at end', message);
+    } else {
+      Lox.report(token.getLine(), " at '" + token.getLexeme() + "'", message);
+    }
   }
 
   private static report(line: number, where: string, message: string) {

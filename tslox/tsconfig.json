@@ -8,7 +8,9 @@
     "outDir": "dist",
     "baseUrl": "./src",
     "paths": {
-      "@local/scanning/*": ["scanning/*"]
+      "@local/ast/*": ["ast/*"],
+      "@local/scanning/*": ["scanning/*"],
+      "@local/parsing/*": ["parsing/*"]
     }
   },
   "include": [
