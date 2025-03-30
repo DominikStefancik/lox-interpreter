@@ -50,7 +50,8 @@
   },
   "_moduleAliases": {
     "@local/ast": "dist/src/ast",
-    "@local/scanning": "dist/src/scanning",
-    "@local/parsing": "dist/src/parsing"
+    "@local/interpreter": "dist/src/interpreter",
+    "@local/parsing": "dist/src/parsing",
+    "@local/scanning": "dist/src/scanning"
   }
 }

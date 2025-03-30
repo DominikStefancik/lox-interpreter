@@ -9,8 +9,9 @@
     "baseUrl": "./src",
     "paths": {
       "@local/ast/*": ["ast/*"],
+      "@local/interpreter/*": ["interpreter/*"],
+      "@local/parsing/*": ["parsing/*"],
       "@local/scanning/*": ["scanning/*"],
-      "@local/parsing/*": ["parsing/*"]
     }
   },
   "include": [
