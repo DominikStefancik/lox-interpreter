@@ -64,15 +64,23 @@ export class Interpreter implements ExpressionVisitor<object> {
         this.checkNumberOperands(expression.operator, left, right);
         return ((left as unknown as number) <= (right as unknown as number)) as unknown as object;
       case TokenType.PLUS:
-        if (left instanceof Number && right instanceof Number) {
+        if (typeof left === 'number' && typeof right === 'number') {
           return ((left as unknown as number) + (right as unknown as number)) as unknown as object;
         }
 
-        if (left instanceof String && right instanceof String) {
+        if (typeof left === 'string' && typeof right === 'string') {
           return ((left as unknown as string) + (right as unknown as string)) as unknown as object;
         }
 
-        throw new RuntimeError(expression.operator, 'Operands must be two numbers or two strings');
+        if (typeof left === 'string' && typeof right === 'number') {
+          return ((left as unknown as string) + (right as unknown as number)) as unknown as object;
+        }
+
+        if (typeof left === 'number' && typeof right === 'string') {
+          return ((left as unknown as string) + (right as unknown as string)) as unknown as object;
+        }
+
+        throw new RuntimeError(expression.operator, 'Operands must be either numbers or strings');
       case TokenType.MINUS:
         return ((left as unknown as number) - (right as unknown as number)) as unknown as object;
       case TokenType.SLASH:
@@ -90,7 +98,7 @@ export class Interpreter implements ExpressionVisitor<object> {
      * To evaluate the grouping expression itself, the subexpression is recursively evaluated and returned.
      */
 
-    return this.evaluate(expression);
+    return this.evaluate(expression.expression);
   }
 
   visitLiteralExpression(expression: Literal): object {
@@ -111,7 +119,7 @@ export class Interpreter implements ExpressionVisitor<object> {
       return false;
     }
 
-    if (object instanceof Boolean) {
+    if (typeof object === 'boolean') {
       return object as boolean;
     }
 
@@ -131,7 +139,7 @@ export class Interpreter implements ExpressionVisitor<object> {
   }
 
   private checkSingleNumberOperand(operator: Token, operand: object) {
-    if (operand instanceof Number) {
+    if (typeof operand === 'number') {
       return;
     }
 
@@ -139,7 +147,7 @@ export class Interpreter implements ExpressionVisitor<object> {
   }
 
   private checkNumberOperands(operator: Token, left: object, right: object) {
-    if (left instanceof Number && right instanceof Number) {
+    if (typeof left === 'number' && typeof right === 'number') {
       return;
     }
 

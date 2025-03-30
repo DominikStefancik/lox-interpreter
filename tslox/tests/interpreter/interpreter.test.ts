@@ -27,6 +27,20 @@ describe('Interpreter', () => {
     expect(result).to.eql(-3);
   });
 
+  it('evaluates negation unary expression', () => {
+    // expression: !3
+    let expression = new Unary(new Token(TokenType.BANG, '!', null, 1), new Literal(3));
+
+    let result = sut.interpret(expression);
+    expect(result).to.eql(false);
+
+    // expression: !false
+    expression = new Unary(new Token(TokenType.BANG, '!', null, 1), new Literal(false));
+
+    result = sut.interpret(expression);
+    expect(result).to.eql(true);
+  });
+
   it('evaluates a simple binary expression', () => {
     // expression: 3 + 1
     const expression = new Binary(
@@ -37,6 +51,38 @@ describe('Interpreter', () => {
 
     const result = sut.interpret(expression);
     expect(result).to.eql(4);
+  });
+
+  it('evaluates equality binary expression', () => {
+    // expression: 3 == 3
+    let expression = new Binary(
+      new Literal(3),
+      new Token(TokenType.EQUAL_EQUAL, '==', null, 1),
+      new Literal(3)
+    );
+
+    let result = sut.interpret(expression);
+    expect(result).to.eql(true);
+
+    // expression: 3 != 3
+    expression = new Binary(
+      new Literal(3),
+      new Token(TokenType.BANG_EQUAL, '!=', null, 1),
+      new Literal(3)
+    );
+
+    result = sut.interpret(expression);
+    expect(result).to.eql(false);
+
+    // expression: false == true
+    expression = new Binary(
+      new Literal(false),
+      new Token(TokenType.EQUAL_EQUAL, '==', null, 1),
+      new Literal(true)
+    );
+
+    result = sut.interpret(expression);
+    expect(result).to.eql(false);
   });
 
   it('evaluates an expression with two operators and correct precedence', () => {
@@ -79,6 +125,40 @@ describe('Interpreter', () => {
     expect(result).to.eql(true);
   });
 
+  it('evaluates a binary expression with plus operator and two strings', () => {
+    // expression: 'hello' + 'World'
+    const expression = new Binary(
+      new Literal('hello'),
+      new Token(TokenType.PLUS, '+', null, 1),
+      new Literal('World')
+    );
+
+    const result = sut.interpret(expression);
+    expect(result).to.eql('helloWorld');
+  });
+
+  it('evaluates a binary expression with plus operator and string and number as operands', () => {
+    // expression: 'hello' + 55
+    let expression = new Binary(
+      new Literal('hello'),
+      new Token(TokenType.PLUS, '+', null, 1),
+      new Literal(55)
+    );
+
+    let result = sut.interpret(expression);
+    expect(result).to.eql('hello55');
+
+    // expression: 'hello' + 55 + 'World'
+    expression = new Binary(
+      new Literal(55),
+      new Token(TokenType.PLUS, '+', null, 1),
+      new Literal('World')
+    );
+
+    result = sut.interpret(expression);
+    expect(result).to.eql('55World');
+  });
+
   it('evaluates an expression with grouping', () => {
     // expression: (15 * 2)
     const subExpression = new Binary(
@@ -91,11 +171,25 @@ describe('Interpreter', () => {
     expect(result).to.eql(30);
   });
 
-  it('returns null and reports error when grouping is missing right parentheses', () => {
-    // expression: (6 / 2
+  it('reports runtime error when a unary value is not number', () => {
+    // expression: -'muffin'
+    const expression = new Unary(new Token(TokenType.MINUS, '-', null, 1), new Literal('muffin'));
+
+    sut.interpret(expression);
+
+    expect(Lox.hadRuntimeError).to.be.equal(true);
   });
 
-  it('returns null and reports error when expression is incorrect', () => {
-    // expression:  a ==
+  it('reports runtime error when one of binary values is not number or string', () => {
+    // expression:  false + 2
+    const expression = new Binary(
+      new Literal(false),
+      new Token(TokenType.PLUS, '+', null, 1),
+      new Literal(2)
+    );
+
+    sut.interpret(expression);
+
+    expect(Lox.hadRuntimeError).to.be.equal(true);
   });
 });

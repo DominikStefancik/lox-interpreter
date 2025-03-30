@@ -89,7 +89,7 @@ export class Lox {
 
   public static runtimeError(error: RuntimeError) {
     console.error(`${error.getMessage()} [line ${error.getToken().getLine()}]`);
-    Lox.hadError = true;
+    Lox.hadRuntimeError = true;
   }
 
   private static report(line: number, where: string, message: string) {

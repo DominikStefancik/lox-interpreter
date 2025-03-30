@@ -1,11 +1,6 @@
 import * as fs from 'node:fs';
 
-type ClassType =
-  | 'Expression'
-  | 'Token'
-  | 'Binary'
-  | 'Unary'
-  | `number | string | 'true' | 'false' | 'nil'`;
+type ClassType = 'Expression' | 'Token' | 'Binary' | 'Unary' | `number | string | boolean | 'nil'`;
 
 export interface ExpressionType {
   filename: string;
