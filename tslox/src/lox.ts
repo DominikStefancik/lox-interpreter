@@ -13,7 +13,7 @@ export class Lox {
    * The interpreter has to be static, so that successive calls to run() inside a REPL session reuse the same instance.
    * This is important for global variables. Those variables should persist throughout the REPL session.
    */
-  private static interpreter: Interpreter = new Interpreter();
+  public static readonly interpreter: Interpreter = new Interpreter();
   public static hadError: boolean = false;
   public static hadRuntimeError: boolean = false;
 

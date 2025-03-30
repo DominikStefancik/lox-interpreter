@@ -10,10 +10,12 @@ import { RuntimeError } from '@local/interpreter/runtime-error';
 import { Lox } from '../lox';
 
 export class Interpreter implements ExpressionVisitor<object> {
-  interpret(expression: Expression) {
+  interpret(expression: Expression): object {
     try {
       const value = this.evaluate(expression);
       console.log(this.stringify(value));
+
+      return value;
     } catch (error) {
       if (error instanceof RuntimeError) {
         Lox.runtimeError(error);
