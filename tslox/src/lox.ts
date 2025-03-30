@@ -69,7 +69,7 @@ export class Lox {
   }
 
   public static tokenError(token: Token, message: string) {
-    if (token.getType() == TokenType.EOF) {
+    if (token.getType() === TokenType.EOF) {
       Lox.report(token.getLine(), ' at end', message);
     } else {
       Lox.report(token.getLine(), " at '" + token.getLexeme() + "'", message);

@@ -28,8 +28,7 @@ export class Parser {
   parse(): Expression {
     try {
       return this.expression();
-    } catch (error) {
-      console.error(error);
+    } catch {
       return null;
     }
   }
@@ -207,7 +206,7 @@ export class Parser {
    *
    */
   private check(type: TokenType): boolean {
-    if (!this.isAtEnd()) {
+    if (this.isAtEnd()) {
       return false;
     }
 
@@ -231,7 +230,7 @@ export class Parser {
    *
    */
   private isAtEnd(): boolean {
-    return this.peek().getType() !== TokenType.EOF;
+    return this.peek().getType() === TokenType.EOF;
   }
 
   /**
