@@ -73,7 +73,7 @@ export class Parser {
    *
    */
   private variableDeclaration(): Statement {
-    const name = this.consume(TokenType.VAR, 'Expect variable name.');
+    const name = this.consume(TokenType.IDENTIFIER, 'Expect variable name.');
     let initializer = undefined;
 
     if (this.match([TokenType.EQUAL])) {

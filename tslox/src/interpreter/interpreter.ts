@@ -13,8 +13,13 @@ import * as console from 'node:console';
 import { ExpressionStatement } from '@local/ast/statements/expression-statement';
 import { Print } from '@local/ast/statements/print';
 import { Statement } from '@local/ast/statements/statement';
+import { Environment } from '@local/interpreter/environment';
+import { VariableDeclaration } from '@local/ast/statements/variable-declaration';
+import { Variable } from '@local/ast/expressions/variable';
 
 export class Interpreter implements ExpressionVisitor<object>, StatementVisitor<void> {
+  private readonly environment = new Environment();
+
   interpret(statements: Statement[]) {
     try {
       for (const statement of statements) {
@@ -112,6 +117,20 @@ export class Interpreter implements ExpressionVisitor<object>, StatementVisitor<
      */
 
     return expression.value as unknown as object;
+  }
+
+  visitVariableExpression(expression: Variable): object {
+    return this.environment.get(expression.name);
+  }
+
+  visitVariableDeclarationStatement(statement: VariableDeclaration): void {
+    let value: object = null;
+
+    if (statement.initializer) {
+      value = this.evaluate(statement.initializer);
+    }
+
+    this.environment.define(statement.name.getLexeme(), value);
   }
 
   visitExpressionStatementStatement(statement: ExpressionStatement): void {
