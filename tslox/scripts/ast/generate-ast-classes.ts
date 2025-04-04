@@ -19,6 +19,7 @@ export interface AstNodeType {
 interface AstNodeField {
   name: string;
   type: ClassType;
+  isOptional?: boolean;
 }
 
 function generateImportSection(imports: string[]): string {
@@ -27,7 +28,7 @@ function generateImportSection(imports: string[]): string {
 
 function generateConstructorArgumentsList(fields: AstNodeField[]): string {
   return fields.reduce((accumulator, current, index) => {
-    accumulator += `public readonly ${current.name}: ${current.type}`;
+    accumulator += `public readonly ${current.name}${current.isOptional ? '?' : ''}: ${current.type}`;
 
     if (index != fields.length - 1) {
       accumulator += ',';

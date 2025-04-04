@@ -71,4 +71,19 @@ export const expressionTypes: AstNodeType[] = [
       `import { ExpressionVisitor } from './expression-visitor';`,
     ],
   },
+  {
+    filename: 'variable',
+    className: 'Variable',
+    fields: [
+      {
+        name: 'name',
+        type: 'Token',
+      },
+    ],
+    imports: [
+      `import { Expression } from './expression';`,
+      `import { ExpressionVisitor } from './expression-visitor';`,
+      `import { Token } from '@local/scanning/token';`,
+    ],
+  },
 ];

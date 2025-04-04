@@ -10,6 +10,8 @@ import { Grouping } from '@local/ast/expressions/grouping';
 import { Statement } from '@local/ast/statements/statement';
 import { Print } from '@local/ast/statements/print';
 import { ExpressionStatement } from '@local/ast/statements/expression-statement';
+import { VariableDeclaration } from '@local/ast/statements/variable-declaration';
+import { Variable } from '@local/ast/expressions/variable';
 
 /**
  * The parser uses Recursive descent technique.
@@ -31,17 +33,55 @@ export class Parser {
   /**
    * Parses the grammar rule:
    *
-   *    program     ::= statement* EOF ;
+   *    program     ::= declaration* EOF ;
    *
    */
   parse(): Statement[] {
     const statements: Statement[] = [];
 
     while (!this.isAtEnd()) {
-      statements.push(this.statement());
+      statements.push(this.declaration());
     }
 
     return statements;
+  }
+
+  /**
+   * Parses the grammar rule:
+   *
+   *    declaration     ::= variableDeclaration
+   *                      | statement ;
+   *
+   */
+  private declaration(): Statement {
+    try {
+      if (this.match([TokenType.VAR])) {
+        return this.variableDeclaration();
+      }
+
+      return this.statement();
+    } catch {
+      this.synchronize();
+      return null;
+    }
+  }
+
+  /**
+   * Parses the grammar rule:
+   *
+   *    variableDeclaration     ::= "var" IDENTIFIER ( "=" expression )? ";" ;
+   *
+   */
+  private variableDeclaration(): Statement {
+    const name = this.consume(TokenType.VAR, 'Expect variable name.');
+    let initializer = undefined;
+
+    if (this.match([TokenType.EQUAL])) {
+      initializer = this.expression();
+    }
+
+    this.consume(TokenType.SEMICOLON, `Expect ';' after variable declaration.`);
+    return new VariableDeclaration(name, initializer);
   }
 
   /**
@@ -177,8 +217,10 @@ export class Parser {
   /**
    * Parses the grammar rule:
    *
-   *    primary        ::= NUMBER | STRING | "true" | "false" | "nil"
-   *                     | "(" expression ")" ;
+   *    primary        ::= NUMBER | STRING
+   *                     | "true" | "false" | "nil"
+   *                     | "(" expression ")"
+   *                     | IDENTIFIER ;
    *
    */
   private primary(): Expression {
@@ -206,6 +248,11 @@ export class Parser {
       const expression = this.expression();
       this.consume(TokenType.RIGHT_PARENTHESES, "Expect ')' after expression.");
       return new Grouping(expression);
+    }
+
+    if (this.match([TokenType.IDENTIFIER])) {
+      const name = this.previous();
+      return new Variable(name);
     }
 
     // If none of the cases match, it means we are sitting on a token that can’t start an expression
