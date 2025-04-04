@@ -1,9 +1,9 @@
-import { Expression } from './expression';
-import { ExpressionVisitor } from './expression-visitor';
-import { Unary } from './unary';
-import { Binary } from './binary';
-import { Grouping } from './grouping';
-import { Literal } from './literal';
+import { Expression } from './expressions/expression';
+import { ExpressionVisitor } from './expressions/expression-visitor';
+import { Unary } from '@local/ast/expressions/unary';
+import { Binary } from '@local/ast/expressions/binary';
+import { Grouping } from '@local/ast/expressions/grouping';
+import { Literal } from '@local/ast/expressions/literal';
 
 export class AstPrinter implements ExpressionVisitor<string> {
   public print(expression: Expression): string {

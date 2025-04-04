@@ -1,6 +1,6 @@
-import { ExpressionType } from './generate-ast-classes';
+import { AstNodeType } from './generate-ast-classes';
 
-export const expressionTypes: ExpressionType[] = [
+export const expressionTypes: AstNodeType[] = [
   {
     filename: 'unary',
     className: 'Unary',
@@ -15,9 +15,9 @@ export const expressionTypes: ExpressionType[] = [
       },
     ],
     imports: [
-      `import { Expression } from './expression';`,
+      `import { Expression } from '@local/ast/expressions/expression';`,
       `import { ExpressionVisitor } from './expression-visitor';`,
-      `import { Token } from '../scanning/token';`,
+      `import { Token } from '@local/scanning/token';`,
     ],
   },
   {
@@ -40,7 +40,7 @@ export const expressionTypes: ExpressionType[] = [
     imports: [
       `import { Expression } from './expression';`,
       `import { ExpressionVisitor } from './expression-visitor';`,
-      `import { Token } from '../scanning/token';`,
+      `import { Token } from '@local/scanning/token';`,
     ],
   },
   {

@@ -2,11 +2,11 @@ import { Token } from '@local/scanning/token';
 import { TokenType } from '@local/scanning/token-type';
 import { Lox } from '../lox';
 import { ParseError } from './parse-error';
-import { Expression } from '@local/ast/expression';
-import { Binary } from '@local/ast/binary';
-import { Unary } from '@local/ast/unary';
-import { Literal } from '@local/ast/literal';
-import { Grouping } from '@local/ast/grouping';
+import { Expression } from '@local/ast/expressions/expression';
+import { Binary } from '@local/ast/expressions/binary';
+import { Unary } from '@local/ast/expressions/unary';
+import { Literal } from '@local/ast/expressions/literal';
+import { Grouping } from '@local/ast/expressions/grouping';
 
 /**
  * The parser uses Recursive descent technique.

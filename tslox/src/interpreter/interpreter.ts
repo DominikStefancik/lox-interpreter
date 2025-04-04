@@ -1,13 +1,13 @@
-import { ExpressionVisitor } from '@local/ast/expression-visitor';
-import { Binary } from '@local/ast/binary';
-import { Grouping } from '@local/ast/grouping';
-import { Literal } from '@local/ast/literal';
-import { Unary } from '@local/ast/unary';
-import { Expression } from '@local/ast/expression';
+import { Binary } from '@local/ast/expressions/binary';
+import { Grouping } from '@local/ast/expressions/grouping';
+import { Literal } from '@local/ast/expressions/literal';
+import { Unary } from '@local/ast/expressions/unary';
+import { Expression } from '@local/ast/expressions/expression';
 import { TokenType } from '@local/scanning/token-type';
 import { Token } from '@local/scanning/token';
 import { RuntimeError } from '@local/interpreter/runtime-error';
 import { Lox } from '../lox';
+import { ExpressionVisitor } from '@local/ast/expressions/expression-visitor';
 
 export class Interpreter implements ExpressionVisitor<object> {
   interpret(expression: Expression): object {

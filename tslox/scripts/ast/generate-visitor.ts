@@ -1,7 +1,9 @@
 import * as fs from 'node:fs';
-import { ExpressionType } from './generate-ast-classes';
+import { AstNodeType } from './generate-ast-classes';
 
-function generateImportSection(types: ExpressionType[]): string {
+type VisitorType = 'expression' | 'statement';
+
+function generateImportSection(types: AstNodeType[]): string {
   return types.reduce((accumulator, currentType) => {
     accumulator += `import { ${currentType.className} } from './${currentType.filename}'\n`;
 
@@ -9,26 +11,36 @@ function generateImportSection(types: ExpressionType[]): string {
   }, '');
 }
 
-function generateVisitorFunctions(types: ExpressionType[], baseClassName: string): string {
+function generateVisitorFunctions(
+  types: AstNodeType[],
+  baseClassName: string,
+  parameterName
+): string {
   return types.reduce((accumulator, currentType) => {
-    accumulator += `visit${currentType.className}${baseClassName}: (expression: ${currentType.className}) => R;\n`;
+    accumulator += `visit${currentType.className}${baseClassName}: (${parameterName}: ${currentType.className}) => R;\n`;
 
     return accumulator;
   }, '');
 }
 
-export function generateVisitor(
-  outputDirPath: string,
-  baseClassName: string,
-  types: ExpressionType[]
-) {
+export function generateVisitor({
+  outputDirPath,
+  baseClassName,
+  visitorType,
+  types,
+}: {
+  outputDirPath: string;
+  baseClassName: string;
+  visitorType: VisitorType;
+  types: AstNodeType[];
+}) {
   const content = `
     ${generateImportSection(types)}
     
-    export interface ExpressionVisitor<R> {
-        ${generateVisitorFunctions(types, baseClassName)}
+    export interface ${baseClassName}Visitor<R> {
+        ${generateVisitorFunctions(types, baseClassName, visitorType)}
     }
   `;
 
-  fs.writeFileSync(`${outputDirPath}/expression-visitor.ts`, content);
+  fs.writeFileSync(`${outputDirPath}/${visitorType}-visitor.ts`, content);
 }

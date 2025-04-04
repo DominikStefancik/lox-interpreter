@@ -1,13 +1,13 @@
 import 'module-alias/register';
 
 import { expect } from 'chai';
-import { Unary } from '../../src/ast/unary';
 import { Token } from '@local/scanning/token';
 import { TokenType } from '@local/scanning/token-type';
-import { Literal } from '../../src/ast/literal';
-import { AstPrinter } from '../../src/ast/ast-printer';
-import { Binary } from '../../src/ast/binary';
-import { Grouping } from '../../src/ast/grouping';
+import { AstPrinter } from '@local/ast/ast-printer';
+import { Unary } from '@local/ast/expressions/unary';
+import { Literal } from '@local/ast/expressions/literal';
+import { Binary } from '@local/ast/expressions/binary';
+import { Grouping } from '@local/ast/expressions/grouping';
 
 describe('AstPrinter', () => {
   it('prints unary expression', () => {

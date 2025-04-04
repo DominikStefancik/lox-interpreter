@@ -4,10 +4,10 @@ import { expect } from 'chai';
 import { Token } from '@local/scanning/token';
 import { TokenType } from '@local/scanning/token-type';
 import { Parser } from '@local/parsing/parser';
-import { Binary } from '@local/ast/binary';
-import { Literal } from '@local/ast/literal';
-import { Unary } from '@local/ast/unary';
-import { Grouping } from '@local/ast/grouping';
+import { Binary } from '@local/ast/expressions/binary';
+import { Literal } from '@local/ast/expressions/literal';
+import { Unary } from '@local/ast/expressions/unary';
+import { Grouping } from '@local/ast/expressions/grouping';
 import { Lox } from '../../src/lox';
 
 describe('Parser', () => {

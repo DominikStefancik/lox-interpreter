@@ -1,6 +1,6 @@
-import { Expression } from './expression';
+import { Expression } from '@local/ast/expressions/expression';
 import { ExpressionVisitor } from './expression-visitor';
-import { Token } from '../scanning/token';
+import { Token } from '@local/scanning/token';
 
 export class Unary extends Expression {
   constructor(

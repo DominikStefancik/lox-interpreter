@@ -1,6 +1,6 @@
 import { Expression } from './expression';
 import { ExpressionVisitor } from './expression-visitor';
-import { Token } from '../scanning/token';
+import { Token } from '@local/scanning/token';
 
 export class Binary extends Expression {
   constructor(
