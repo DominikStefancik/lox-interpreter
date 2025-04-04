@@ -12,6 +12,7 @@ import { Print } from '@local/ast/statements/print';
 import { ExpressionStatement } from '@local/ast/statements/expression-statement';
 import { VariableDeclaration } from '@local/ast/statements/variable-declaration';
 import { Variable } from '@local/ast/expressions/variable';
+import { Assignment } from '@local/ast/expressions/assignment';
 
 /**
  * The parser uses Recursive descent technique.
@@ -116,11 +117,35 @@ export class Parser {
   /**
    * Parses the grammar rule:
    *
-   *    expression     ::= equality ;
+   *    expression     ::= assignment ;
    *
    */
   private expression(): Expression {
-    return this.equality();
+    return this.assignment();
+  }
+
+  /**
+   * Parses the grammar rule:
+   *
+   *    assignment     ::= IDENTIFIER "=" assignment
+   *                     | equality ;
+   *
+   */
+  private assignment(): Expression {
+    const expression = this.equality();
+
+    if (this.match([TokenType.EQUAL])) {
+      const equals = this.previous();
+      const value = this.assignment();
+
+      if (expression instanceof Variable) {
+        return new Assignment((expression as Variable).name, value);
+      }
+
+      this.error(equals, 'Invalid assignment target');
+    }
+
+    return expression;
   }
 
   /**

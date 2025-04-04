@@ -3,6 +3,7 @@ import { Binary } from './binary';
 import { Grouping } from './grouping';
 import { Literal } from './literal';
 import { Variable } from './variable';
+import { Assignment } from './assignment';
 
 export interface ExpressionVisitor<R> {
   visitUnaryExpression: (expression: Unary) => R;
@@ -10,4 +11,5 @@ export interface ExpressionVisitor<R> {
   visitGroupingExpression: (expression: Grouping) => R;
   visitLiteralExpression: (expression: Literal) => R;
   visitVariableExpression: (expression: Variable) => R;
+  visitAssignmentExpression: (expression: Assignment) => R;
 }

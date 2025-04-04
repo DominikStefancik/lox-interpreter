@@ -16,6 +16,7 @@ import { Statement } from '@local/ast/statements/statement';
 import { Environment } from '@local/interpreter/environment';
 import { VariableDeclaration } from '@local/ast/statements/variable-declaration';
 import { Variable } from '@local/ast/expressions/variable';
+import { Assignment } from '@local/ast/expressions/assignment';
 
 export class Interpreter implements ExpressionVisitor<object>, StatementVisitor<void> {
   private readonly environment = new Environment();
@@ -121,6 +122,13 @@ export class Interpreter implements ExpressionVisitor<object>, StatementVisitor<
 
   visitVariableExpression(expression: Variable): object {
     return this.environment.get(expression.name);
+  }
+
+  visitAssignmentExpression(expression: Assignment): object {
+    const value = this.evaluate(expression);
+    this.environment.assign(expression.name, value);
+
+    return value;
   }
 
   visitVariableDeclarationStatement(statement: VariableDeclaration): void {

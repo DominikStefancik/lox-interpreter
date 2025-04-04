@@ -1,4 +1,4 @@
-import { AstNodeType } from './generate-ast-classes';
+import { AstNodeType } from './models';
 
 export const statementTypes: AstNodeType[] = [
   {

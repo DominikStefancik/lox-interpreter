@@ -1,26 +1,5 @@
 import * as fs from 'node:fs';
-
-type ExpressionType =
-  | 'Expression'
-  | 'Token'
-  | 'Binary'
-  | 'Unary'
-  | `number | string | boolean | 'nil'`;
-type StatementType = 'Statement';
-type ClassType = ExpressionType | StatementType;
-
-export interface AstNodeType {
-  filename: string;
-  className: string;
-  fields: AstNodeField[];
-  imports: string[];
-}
-
-interface AstNodeField {
-  name: string;
-  type: ClassType;
-  isOptional?: boolean;
-}
+import { AstNodeType, AstNodeField } from './models';
 
 function generateImportSection(imports: string[]): string {
   return imports.reduce((accumulator, current) => accumulator + current + '\n', '');

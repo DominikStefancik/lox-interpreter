@@ -1,4 +1,4 @@
-import { AstNodeType } from './generate-ast-classes';
+import { AstNodeType } from './models';
 
 export const expressionTypes: AstNodeType[] = [
   {
@@ -82,6 +82,25 @@ export const expressionTypes: AstNodeType[] = [
     ],
     imports: [
       `import { Expression } from './expression';`,
+      `import { ExpressionVisitor } from './expression-visitor';`,
+      `import { Token } from '@local/scanning/token';`,
+    ],
+  },
+  {
+    filename: 'assignment',
+    className: 'Assignment',
+    fields: [
+      {
+        name: 'name',
+        type: 'Token',
+      },
+      {
+        name: 'value',
+        type: 'Expression',
+      },
+    ],
+    imports: [
+      `import { Expression } from '@local/ast/expressions/expression';`,
       `import { ExpressionVisitor } from './expression-visitor';`,
       `import { Token } from '@local/scanning/token';`,
     ],

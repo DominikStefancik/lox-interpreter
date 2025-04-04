@@ -5,6 +5,7 @@ import { Binary } from '@local/ast/expressions/binary';
 import { Grouping } from '@local/ast/expressions/grouping';
 import { Literal } from '@local/ast/expressions/literal';
 import { Variable } from '@local/ast/expressions/variable';
+import { Assignment } from '@local/ast/expressions/assignment';
 
 export class AstPrinter implements ExpressionVisitor<string> {
   public print(expression: Expression): string {
@@ -31,6 +32,10 @@ export class AstPrinter implements ExpressionVisitor<string> {
 
   visitVariableExpression(expression: Variable): string {
     return expression.name.toString();
+  }
+
+  visitAssignmentExpression(expression: Assignment): string {
+    return this.parenthesize(expression.name.getLexeme(), [expression.value]);
   }
 
   private parenthesize(name: string, expressions: Expression[]): string {

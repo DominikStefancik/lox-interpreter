@@ -2,6 +2,7 @@ import { expressionTypes } from './lox-expression-definitions';
 import { generateAst } from './generate-ast-classes';
 import { generateVisitor } from './generate-visitor';
 import { statementTypes } from './lox-statement-definitions';
+import { VisitorType } from './models';
 
 const { argv } = process;
 
@@ -18,7 +19,7 @@ generateAst({
 generateVisitor({
   outputDirPath: `${argv[2]}/expressions`,
   baseClassName: 'Expression',
-  visitorType: 'expression',
+  visitorType: VisitorType.expression,
   types: expressionTypes,
 });
 
@@ -31,6 +32,6 @@ generateAst({
 generateVisitor({
   outputDirPath: `${argv[2]}/statements`,
   baseClassName: 'Statement',
-  visitorType: 'statement',
+  visitorType: VisitorType.statement,
   types: statementTypes,
 });

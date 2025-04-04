@@ -1,7 +1,5 @@
 import * as fs from 'node:fs';
-import { AstNodeType } from './generate-ast-classes';
-
-type VisitorType = 'expression' | 'statement';
+import { AstNodeType, VisitorType } from './models';
 
 function generateImportSection(types: AstNodeType[]): string {
   return types.reduce((accumulator, currentType) => {
