@@ -8,14 +8,18 @@ import { Token } from '@local/scanning/token';
 import { RuntimeError } from '@local/interpreter/runtime-error';
 import { Lox } from '../lox';
 import { ExpressionVisitor } from '@local/ast/expressions/expression-visitor';
+import { StatementVisitor } from '@local/ast/statements/statement-visitor';
+import * as console from 'node:console';
+import { ExpressionStatement } from '@local/ast/statements/expression-statement';
+import { Print } from '@local/ast/statements/print';
+import { Statement } from '@local/ast/statements/statement';
 
-export class Interpreter implements ExpressionVisitor<object> {
-  interpret(expression: Expression): object {
+export class Interpreter implements ExpressionVisitor<object>, StatementVisitor<void> {
+  interpret(statements: Statement[]) {
     try {
-      const value = this.evaluate(expression);
-      console.log(this.stringify(value));
-
-      return value;
+      for (const statement of statements) {
+        this.execute(statement);
+      }
     } catch (error) {
       if (error instanceof RuntimeError) {
         Lox.runtimeError(error);
@@ -108,6 +112,19 @@ export class Interpreter implements ExpressionVisitor<object> {
      */
 
     return expression.value as unknown as object;
+  }
+
+  visitExpressionStatementStatement(statement: ExpressionStatement): void {
+    this.evaluate(statement.expression);
+  }
+
+  visitPrintStatement(statement: Print): void {
+    const value = this.evaluate(statement.expression);
+    console.log(this.stringify(value));
+  }
+
+  private execute(statement: Statement) {
+    statement.accept(this);
   }
 
   private evaluate(expression: Expression): object {

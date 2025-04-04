@@ -9,6 +9,7 @@ import { Literal } from '@local/ast/expressions/literal';
 import { Unary } from '@local/ast/expressions/unary';
 import { Grouping } from '@local/ast/expressions/grouping';
 import { Lox } from '../../src/lox';
+import { ExpressionStatement } from '@local/ast/statements/expression-statement';
 
 describe('Parser', () => {
   it('parses a simple unary expression', () => {
@@ -16,10 +17,12 @@ describe('Parser', () => {
     const tokens = [
       new Token(TokenType.MINUS, '-', null, 1),
       new Token(TokenType.NUMBER, '3', 3, 1),
+      new Token(TokenType.SEMICOLON, ';', null, 1),
       new Token(TokenType.EOF, '', null, 1),
     ];
     const sut = new Parser(tokens);
-    const expression = sut.parse();
+    const statements = sut.parse();
+    const expression = (statements[0] as ExpressionStatement).expression;
 
     expect(expression).to.not.equal(null);
     expect(expression instanceof Unary).to.be.equal(true);
@@ -35,10 +38,12 @@ describe('Parser', () => {
       new Token(TokenType.NUMBER, '3', 3, 1),
       new Token(TokenType.PLUS, '+', null, 1),
       new Token(TokenType.NUMBER, '1', 1, 1),
+      new Token(TokenType.SEMICOLON, ';', null, 1),
       new Token(TokenType.EOF, '', null, 1),
     ];
     const sut = new Parser(tokens);
-    const expression = sut.parse();
+    const statements = sut.parse();
+    const expression = (statements[0] as ExpressionStatement).expression;
 
     expect(expression).to.not.equal(null);
     expect(expression instanceof Binary).to.be.equal(true);
@@ -57,10 +62,12 @@ describe('Parser', () => {
       new Token(TokenType.NUMBER, '2', 2, 1),
       new Token(TokenType.PLUS, '+', null, 1),
       new Token(TokenType.NUMBER, '1', 1, 1),
+      new Token(TokenType.SEMICOLON, ';', null, 1),
       new Token(TokenType.EOF, '', null, 1),
     ];
     const sut = new Parser(tokens);
-    const expression = sut.parse();
+    const statements = sut.parse();
+    const expression = (statements[0] as ExpressionStatement).expression;
 
     expect(expression).to.not.equal(null);
     expect(expression instanceof Binary).to.be.equal(true);
@@ -91,10 +98,12 @@ describe('Parser', () => {
       new Token(TokenType.STRING, 'c', 'c', 1),
       new Token(TokenType.MINUS, '-', null, 1),
       new Token(TokenType.NUMBER, '5', 5, 1),
+      new Token(TokenType.SEMICOLON, ';', null, 1),
       new Token(TokenType.EOF, '', null, 1),
     ];
     const sut = new Parser(tokens);
-    const expression = sut.parse();
+    const statements = sut.parse();
+    const expression = (statements[0] as ExpressionStatement).expression;
 
     expect(expression).to.not.equal(null);
     expect(expression instanceof Binary).to.be.equal(true);
@@ -135,10 +144,12 @@ describe('Parser', () => {
       new Token(TokenType.SLASH, '/', null, 1),
       new Token(TokenType.NUMBER, '2', 2, 1),
       new Token(TokenType.RIGHT_PARENTHESES, ')', null, 1),
+      new Token(TokenType.SEMICOLON, ';', null, 1),
       new Token(TokenType.EOF, '', null, 1),
     ];
     const sut = new Parser(tokens);
-    const expression = sut.parse();
+    const statements = sut.parse();
+    const expression = (statements[0] as ExpressionStatement).expression;
 
     expect(expression).to.not.equal(null);
     expect(expression instanceof Grouping).to.be.equal(true);
@@ -162,7 +173,8 @@ describe('Parser', () => {
       new Token(TokenType.EOF, '', null, 1),
     ];
     const sut = new Parser(tokens);
-    const expression = sut.parse();
+    const statements = sut.parse();
+    const expression = (statements[0] as ExpressionStatement).expression;
 
     expect(expression).to.be.equal(null);
     expect(Lox.hadError).to.be.equal(true);
@@ -176,7 +188,8 @@ describe('Parser', () => {
       new Token(TokenType.EOF, '', null, 1),
     ];
     const sut = new Parser(tokens);
-    const expression = sut.parse();
+    const statements = sut.parse();
+    const expression = (statements[0] as ExpressionStatement).expression;
 
     expect(expression).to.be.equal(null);
     expect(Lox.hadError).to.be.equal(true);

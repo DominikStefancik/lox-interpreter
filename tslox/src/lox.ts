@@ -66,13 +66,13 @@ export class Lox {
     const scanner = new Scanner(source);
     const tokens = scanner.scanTokens();
     const parser = new Parser(tokens);
-    const expression = parser.parse();
+    const statements = parser.parse();
 
     if (Lox.hadError) {
       return;
     }
 
-    Lox.interpreter.interpret(expression);
+    Lox.interpreter.interpret(statements);
   }
 
   public static error(line: number, message: string) {
