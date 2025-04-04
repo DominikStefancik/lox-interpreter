@@ -7,6 +7,9 @@ import { Binary } from '@local/ast/expressions/binary';
 import { Unary } from '@local/ast/expressions/unary';
 import { Literal } from '@local/ast/expressions/literal';
 import { Grouping } from '@local/ast/expressions/grouping';
+import { Statement } from '@local/ast/statements/statement';
+import { Print } from '@local/ast/statements/print';
+import { ExpressionStatement } from '@local/ast/statements/expression-statement';
 
 /**
  * The parser uses Recursive descent technique.
@@ -25,12 +28,49 @@ export class Parser {
 
   constructor(private readonly tokens: Token[]) {}
 
-  parse(): Expression {
-    try {
-      return this.expression();
-    } catch {
-      return null;
+  /**
+   * Parses the grammar rule:
+   *
+   *    program     ::= statement* EOF ;
+   *
+   */
+  parse(): Statement[] {
+    const statements: Statement[] = [];
+
+    while (!this.isAtEnd()) {
+      statements.push(this.statement());
     }
+
+    return statements;
+  }
+
+  /**
+   * Parses the grammar rule:
+   *
+   *    statement     ::= expressionStatement
+   *                    | printStatement ;
+   *
+   */
+  private statement(): Statement {
+    if (this.match([TokenType.PRINT])) {
+      return this.printStatement();
+    }
+
+    return this.expressionStatement();
+  }
+
+  private expressionStatement(): Statement {
+    const expression = this.expression();
+
+    this.consume(TokenType.SEMICOLON, `Expect ';' after expression.`);
+    return new ExpressionStatement(expression);
+  }
+
+  private printStatement(): Statement {
+    const expression = this.expression();
+
+    this.consume(TokenType.SEMICOLON, `Expect ';' after expression.`);
+    return new Print(expression);
   }
 
   /**
