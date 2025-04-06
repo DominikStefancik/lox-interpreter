@@ -32,6 +32,20 @@ export const statementTypes: AstNodeType[] = [
     ],
   },
   {
+    filename: 'block',
+    className: 'Block',
+    fields: [
+      {
+        name: 'statements',
+        type: 'Statement[]',
+      },
+    ],
+    imports: [
+      `import { Statement } from './statement';`,
+      `import { StatementVisitor } from './statement-visitor';`,
+    ],
+  },
+  {
     filename: 'variable-declaration',
     className: 'VariableDeclaration',
     fields: [

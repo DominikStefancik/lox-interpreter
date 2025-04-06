@@ -17,9 +17,10 @@ import { Environment } from '@local/interpreter/environment';
 import { VariableDeclaration } from '@local/ast/statements/variable-declaration';
 import { Variable } from '@local/ast/expressions/variable';
 import { Assignment } from '@local/ast/expressions/assignment';
+import { Block } from '@local/ast/statements/block';
 
 export class Interpreter implements ExpressionVisitor<object>, StatementVisitor<void> {
-  private readonly environment = new Environment();
+  private environment = new Environment();
 
   interpret(statements: Statement[]) {
     try {
@@ -150,8 +151,28 @@ export class Interpreter implements ExpressionVisitor<object>, StatementVisitor<
     console.log(this.stringify(value));
   }
 
+  visitBlockStatement(statement: Block): void {
+    this.executeBlock(statement.statements, new Environment(this.environment));
+  }
+
   private execute(statement: Statement) {
     statement.accept(this);
+  }
+
+  private executeBlock(statements: Statement[], environment: Environment) {
+    const previousEnvironment = this.environment;
+
+    // To execute code within a given scope, this method updates the interpreter’s environment field,
+    // visits all the statements, and then restores the previous value
+    try {
+      this.environment = environment;
+
+      for (const statement of statements) {
+        statement.accept(this);
+      }
+    } finally {
+      this.environment = previousEnvironment;
+    }
   }
 
   private evaluate(expression: Expression): object {

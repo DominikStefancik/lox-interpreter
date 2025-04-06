@@ -13,6 +13,7 @@ import { ExpressionStatement } from '@local/ast/statements/expression-statement'
 import { VariableDeclaration } from '@local/ast/statements/variable-declaration';
 import { Variable } from '@local/ast/expressions/variable';
 import { Assignment } from '@local/ast/expressions/assignment';
+import { Block } from '@local/ast/statements/block';
 
 /**
  * The parser uses Recursive descent technique.
@@ -89,7 +90,8 @@ export class Parser {
    * Parses the grammar rule:
    *
    *    statement     ::= expressionStatement
-   *                    | printStatement ;
+   *                    | printStatement
+   *                    | block ;
    *
    */
   private statement(): Statement {
@@ -97,9 +99,19 @@ export class Parser {
       return this.printStatement();
     }
 
+    if (this.match([TokenType.LEFT_CURLY_BRACE])) {
+      return new Block(this.block());
+    }
+
     return this.expressionStatement();
   }
 
+  /**
+   * Parses the grammar rule:
+   *
+   *    expressionStatement     ::= expression
+   *
+   */
   private expressionStatement(): Statement {
     const expression = this.expression();
 
@@ -107,11 +119,35 @@ export class Parser {
     return new ExpressionStatement(expression);
   }
 
+  /**
+   * Parses the grammar rule:
+   *
+   *    printStatement     ::= "print" expression ";" ;
+   *
+   */
   private printStatement(): Statement {
     const expression = this.expression();
 
     this.consume(TokenType.SEMICOLON, `Expect ';' after expression.`);
     return new Print(expression);
+  }
+
+  /**
+   * Parses the grammar rule:
+   *
+   *    block     ::= "{" declaration "}" ;
+   *
+   */
+  private block(): Statement[] {
+    const statements: Statement[] = [];
+
+    while (this.check(TokenType.RIGHT_CURLY_BRACE) && !this.isAtEnd()) {
+      statements.push(this.declaration());
+    }
+
+    this.consume(TokenType.RIGHT_CURLY_BRACE, `Expect '}' after block.`);
+
+    return statements;
   }
 
   /**

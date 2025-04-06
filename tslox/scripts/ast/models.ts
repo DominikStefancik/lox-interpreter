@@ -5,7 +5,7 @@ type ExpressionType =
   | 'Unary'
   | `number | string | boolean | 'nil'`;
 
-type StatementType = 'Statement';
+type StatementType = 'Statement' | 'Statement[]';
 
 export type ClassType = ExpressionType | StatementType;
 
