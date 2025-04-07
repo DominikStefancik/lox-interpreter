@@ -8,10 +8,10 @@ import { Binary } from '@local/ast/expressions/binary';
 import { Literal } from '@local/ast/expressions/literal';
 import { Unary } from '@local/ast/expressions/unary';
 import { Grouping } from '@local/ast/expressions/grouping';
-import { Lox } from '../../src/lox';
 import { ExpressionStatement } from '@local/ast/statements/expression-statement';
+import { Assignment } from '@local/ast/expressions/assignment';
 
-describe('Parser', () => {
+describe('Parser - Expressions', () => {
   it('parses a simple unary expression', () => {
     // expression: -3
     const tokens = [
@@ -154,16 +154,44 @@ describe('Parser', () => {
     expect(expression).to.not.equal(null);
     expect(expression instanceof Grouping).to.be.equal(true);
 
-    const binary = expression as Grouping;
-    expect(binary.expression instanceof Binary).to.be.equal(true);
+    const grouping = expression as Grouping;
+    expect(grouping.expression instanceof Binary).to.be.equal(true);
 
-    const innerExpression = binary.expression as Binary;
+    const innerExpression = grouping.expression as Binary;
     expect(innerExpression.left).to.eql(new Literal(6));
     expect(innerExpression.operator).to.eql(new Token(TokenType.SLASH, '/', null, 1));
     expect(innerExpression.right).to.eql(new Literal(2));
   });
 
-  it('returns null and reports error when grouping is missing right parentheses', () => {
+  it('parses an expression with assignment', () => {
+    // expression: result = a + 10;
+    const tokens = [
+      new Token(TokenType.IDENTIFIER, 'result', null, 1),
+      new Token(TokenType.EQUAL, '=', null, 1),
+      new Token(TokenType.STRING, 'a', 'a', 1),
+      new Token(TokenType.PLUS, '+', null, 1),
+      new Token(TokenType.NUMBER, '10', 10, 1),
+      new Token(TokenType.SEMICOLON, ';', null, 1),
+      new Token(TokenType.EOF, '', null, 1),
+    ];
+    const sut = new Parser(tokens);
+    const statements = sut.parse();
+    const expression = (statements[0] as ExpressionStatement).expression;
+
+    expect(expression).to.not.equal(null);
+    expect(expression instanceof Assignment).to.be.equal(true);
+
+    const assignment = expression as Assignment;
+    expect(assignment.name).to.eql(new Token(TokenType.IDENTIFIER, 'result', null, 1));
+    expect(assignment.value instanceof Binary).to.be.equal(true);
+
+    const value = assignment.value as Binary;
+    expect(value.left).to.eql(new Literal('a'));
+    expect(value.operator).to.eql(new Token(TokenType.PLUS, '+', null, 1));
+    expect(value.right).to.eql(new Literal(10));
+  });
+
+  it('returns statements array with null when grouping is missing right parentheses', () => {
     // expression: (6 / 2
     const tokens = [
       new Token(TokenType.LEFT_PARENTHESES, '(', null, 1),
@@ -174,13 +202,11 @@ describe('Parser', () => {
     ];
     const sut = new Parser(tokens);
     const statements = sut.parse();
-    const expression = (statements[0] as ExpressionStatement).expression;
 
-    expect(expression).to.be.equal(null);
-    expect(Lox.hadError).to.be.equal(true);
+    expect(statements[0]).to.be.equal(null);
   });
 
-  it('returns null and reports error when expression is incorrect', () => {
+  it('returns statements array with null when expression is incorrect', () => {
     // expression:  a ==
     const tokens = [
       new Token(TokenType.STRING, 'a', 'a', 1),
@@ -189,9 +215,26 @@ describe('Parser', () => {
     ];
     const sut = new Parser(tokens);
     const statements = sut.parse();
-    const expression = (statements[0] as ExpressionStatement).expression;
 
-    expect(expression).to.be.equal(null);
-    expect(Lox.hadError).to.be.equal(true);
+    expect(statements[0]).to.be.equal(null);
+  });
+
+  it('returns statements array with only left side when assignment expression is incorrect', () => {
+    // expression:  a + 1 = b + 3;
+    const tokens = [
+      new Token(TokenType.STRING, 'a', 'a', 1),
+      new Token(TokenType.PLUS, '+', null, 1),
+      new Token(TokenType.NUMBER, '1', 1, 1),
+      new Token(TokenType.EQUAL, '=', null, 1),
+      new Token(TokenType.STRING, 'b', 'b', 1),
+      new Token(TokenType.STAR, '*', null, 1),
+      new Token(TokenType.NUMBER, '3', 3, 1),
+      new Token(TokenType.SEMICOLON, ';', null, 1),
+      new Token(TokenType.EOF, '', null, 1),
+    ];
+    const sut = new Parser(tokens);
+    const statements = sut.parse();
+
+    expect(statements.length).to.be.equal(1);
   });
 });

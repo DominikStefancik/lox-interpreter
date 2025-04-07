@@ -141,7 +141,7 @@ export class Parser {
   private block(): Statement[] {
     const statements: Statement[] = [];
 
-    while (this.check(TokenType.RIGHT_CURLY_BRACE) && !this.isAtEnd()) {
+    while (!this.check(TokenType.RIGHT_CURLY_BRACE) && !this.isAtEnd()) {
       statements.push(this.declaration());
     }
 
